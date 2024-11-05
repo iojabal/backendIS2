@@ -58,6 +58,6 @@ sequelize.sync().then(() => {
 })
 
 Products.associate = models => {
-    Products.belongsToMany(Category, {through: ProductsCategory, foreignKey: "productId"})
+    Products.belongsToMany(models.Category, {through: ProductsCategory, foreignKey: "productId"})
 }
 module.exports = Products

@@ -5,14 +5,15 @@ const User = require("./user")
 const Rol = require("./Rol");
 const Products = require('./products');
 const Category = require('./Category');
+const ProductsCategory = require('./Producst_Category');
 
-const models = { User, Rol };
+const models = { User, Rol, Products, Category, ProductsCategory };
 
-User.associate(models);
-Rol.associate(models);
-Products.associate(models);
-Category.associate(models);
-ProductsCategory.associate(models)
+Object.keys(models).forEach(modelName => {
+    if (models[modelName].associate) {
+        models[modelName].associate(models);
+    }
+});
 
 // Definir las asociaciones
 // User.hasOne(Rol, { foreignKey: 'roleId', as: 'role' });
@@ -28,6 +29,5 @@ sequelize.sync({ alter: true })
 
 module.exports = {
     sequelize,
-    User,
-    Rol
+   ...models 
 };
