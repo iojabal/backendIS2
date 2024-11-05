@@ -3,7 +3,8 @@ const express = require('express')
 const {
     registrarProducto,
     obtenerProductos,
-    obtenerProductosPorId
+    obtenerProductosPorId,
+     actuzalizarProducto
 } = require('../controllers/productsController')
 
 const router = express.Router()
@@ -11,5 +12,6 @@ const router = express.Router()
 router.post('/', registrarProducto)
 router.get('/', obtenerProductos)
 router.get('/:id', obtenerProductosPorId)
+router.put('/:id', actuzalizarProducto)
 
 module.exports = router

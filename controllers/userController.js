@@ -73,7 +73,8 @@ const registrarUsuario = async (req, res) => {
 const actualizarUsuario = async (req, res) => {
     res.header("Content-Type", "application/json");
 
-    const {id, ci, name, lastname, username, password, roleId} = req.body
+    const { id } = req.params;
+    const {ci, name, lastname, username, password, roleId} = req.body
 
     if (!id || !ci) {
         return res.staus(400).json({error: "Id o CI del usuario es requerido"});
