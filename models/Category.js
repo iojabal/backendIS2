@@ -21,7 +21,7 @@ sequelize.sync().then(() => {
 })
 
 Category.associate = models => {
-    Category.belongsToMany(models.Products, {through: ProductsCategory, foreignKey: 'categoryId'})
+    Category.belongsToMany(models.Products, {through: ProductsCategory, foreignKey: 'categoryId', as: 'products'})
 }
 
 module.exports = Category;
