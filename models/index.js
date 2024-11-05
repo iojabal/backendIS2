@@ -6,8 +6,10 @@ const Rol = require("./Rol");
 const Products = require('./products');
 const Category = require('./Category');
 const ProductsCategory = require('./Producst_Category');
+const Lote = require('./Lote');
+const Providers = require('./Providers');
 
-const models = { User, Rol, Products, Category, ProductsCategory };
+const models = { User, Rol, Products, Category, ProductsCategory, Lote, Providers};
 
 Object.keys(models).forEach(modelName => {
     if (models[modelName].associate) {

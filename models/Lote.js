@@ -1,7 +1,7 @@
 const {DataTypes, DATE} = require('sequelize')
 const sequelize = require('../config/database')
-const { Products } = require('.')
-const Providers = require('./Providers')
+const { Products, Providers } = require('.')
+
 
 const Lote = sequelize.define("lote", {
     id: {
@@ -22,13 +22,6 @@ const Lote = sequelize.define("lote", {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    id_producto: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Products,
-            key: 'id_product'
-        }
-    },
     id_proveedor: {
         type: DataTypes.INTEGER,
         references: {
@@ -42,5 +35,9 @@ sequelize.sync().then( () => {
     console.log("Refreshed")
 })
 
+Lote.associate = models => {
+    Lote.hasMany(models.Products, {foreignKey: "loteId", as: 'productos'});
+    Lote.belongsTo(models.Providers, {foreignKey: "id_proveedor", as: 'proveedor'});
+}
 
 module.exports = Lote;

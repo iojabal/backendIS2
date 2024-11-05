@@ -31,4 +31,8 @@ sequelize.sync().then(() => {
     console.log("Refreshed")
 })
 
+Providers.associate = models => {
+    Providers.hasMany(models.Lote, {foreignKey: 'id_proveedor', as: 'lote'})
+}
+
 module.exports = Providers

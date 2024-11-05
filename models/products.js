@@ -49,6 +49,13 @@ const Products = sequelize.define("product", {
             model: Category,
             key: 'id'
         }
+    },
+    loteId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'lotes',
+            key: 'id'
+        }
     }
 
 })
@@ -59,5 +66,6 @@ sequelize.sync().then(() => {
 
 Products.associate = models => {
     Products.belongsToMany(models.Category, {through: ProductsCategory, foreignKey: "productId", as: 'category'})
+    Products.belongsTo(models.Lote, {foreignKey: 'loteId', as: 'lote'});
 }
 module.exports = Products
