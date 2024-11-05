@@ -2,12 +2,17 @@
 const Sequelize = require('sequelize')
 const sequelize = require("../config/database");
 const User = require("./user")
-const Rol = require("./Rol")
+const Rol = require("./Rol");
+const Products = require('./products');
+const Category = require('./Category');
 
 const models = { User, Rol };
 
 User.associate(models);
 Rol.associate(models);
+Products.associate(models);
+Category.associate(models);
+ProductsCategory.associate(models)
 
 // Definir las asociaciones
 // User.hasOne(Rol, { foreignKey: 'roleId', as: 'role' });
