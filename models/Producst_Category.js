@@ -20,4 +20,15 @@ const ProductsCategory = sequelize.define("products_category", {
     }
 })
 
+ProductsCategory.associate = models => {
+    ProductsCategory.belongsTo(models.Products, {
+        foreignKey: 'productId',
+        as: 'product'
+    })
+    ProductsCategory.belongsTo(models.Category, {
+        foreignKey: "categoryId",
+        as: 'category'
+    })
+}
+
 module.exports = ProductsCategory;

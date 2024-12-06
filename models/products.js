@@ -3,6 +3,8 @@ const sequelize = require('../config/database')
 
 const Category = require("./Category")
 const ProductsCategory = require('./Producst_Category')
+const SalesProducts = require('./SalesProducts')
+const Lote = require('./Lote')
 
 const Products = sequelize.define("product", {
     id_product: {
@@ -53,7 +55,7 @@ const Products = sequelize.define("product", {
     loteId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'lotes',
+            model: Lote,
             key: 'id'
         }
     }
@@ -67,5 +69,8 @@ sequelize.sync().then(() => {
 Products.associate = models => {
     Products.belongsToMany(models.Category, {through: ProductsCategory, foreignKey: "productId", as: 'category'})
     Products.belongsTo(models.Lote, {foreignKey: 'loteId', as: 'lote'});
+    Products.belongsToMany(models.Sales, {through: models.SalesProducts, foreignKey: "productId", as: "sales"})
+    Products.hasMany(models.SalesProducts, {foreignKey: 'productId', as: 'saleProducts'})
+    Products.hasMany(models.ProductsCategory, {foreignKey: 'productId', as: 'productsCategory'})
 }
 module.exports = Products

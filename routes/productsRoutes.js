@@ -12,6 +12,6 @@ const router = express.Router()
 router.post('/', registrarProducto)
 router.get('/', obtenerProductos)
 router.get('/:id', obtenerProductosPorId)
-router.put('/:id', actuzalizarProducto)
+router.put('/:id_product', actuzalizarProducto)
 
 module.exports = router

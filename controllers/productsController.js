@@ -1,4 +1,7 @@
 const { Products, Category } = require("../models")
+const Lote = require("../models/Lote")
+const ProductsCategory = require("../models/Producst_Category")
+const Providers = require("../models/Providers")
 
 const obtenerProductos = async (req, res) => {
     res.header("Content-Type", "application/json")
@@ -6,8 +9,24 @@ const obtenerProductos = async (req, res) => {
     try {
         const productos = await Products.findAll({
             include: [{
-                model: Category,
-                as: 'category'
+                model: ProductsCategory,
+                as: 'productsCategory',
+                include: [
+                    {
+                        model: Category,
+                        as: 'category'
+                    }
+                ]
+            },
+            {
+                model: Lote,
+                as: "lote",
+                include: [
+                    {
+                        model: Providers,
+                        as: "proveedor"
+                    }
+                ]
             }]
         })
         return res.status(200).json(productos)
@@ -24,11 +43,21 @@ const obtenerProductosPorId = async (req, res) => {
 
     try {
         const product = await Products.findOne({
-            where: { id }, 
+            where: { id_product: id}, 
             include: [{
-                model: Category,
-                as: 'category'
-            }]
+                model: ProductsCategory,
+                as: 'productsCategory'
+            },
+        {
+            model: Lote,
+            as: "lote",
+            include: [
+                {
+                    model: Providers,
+                    as: "proveedor"
+                }
+            ]
+        }],
         })
         if (!product) {
             return res.status(404).json({error: "Producto No encontrado"});
@@ -42,12 +71,12 @@ const obtenerProductosPorId = async (req, res) => {
 }
 
 const registrarProducto = async (req, res) => {
-    res.header("Content-Type", "application/json")
-    const {name, description, actual_stock, minimal_stock, buy_price, sell_price, metric_unit, state, id_category} = req.body;
+    res.header("Content-Type", "application/json");
+    const { name, description, actual_stock, minimal_stock, buy_price, sell_price, metric_unit, state, id_category, loteId } = req.body;
 
+    // Verificar que todos los campos necesarios estén presentes
     if (!name || !description || !actual_stock || !minimal_stock || !buy_price || !sell_price || !metric_unit || !state || !id_category) {
-        return res.status(400).json({error: "Todos los campos son requeridos"});
-
+        return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
     const product = {
@@ -59,23 +88,42 @@ const registrarProducto = async (req, res) => {
         sell_price,
         metric_unit,
         state,
-        id_category
-    }
+        id_category,
+        loteId
+    };
 
-    try{
-        const result = await Products.create(product)
-        return res.status(201).json(result)
-    }catch(error ){ 
-        console.error("error al registrar el producto", error)
-        return res.status(500).json({error: "error al registrar el producto"})
+    try {
+        // Crear el producto
+        const result = await Products.create(product);
+
+        // Crear la relación entre producto y categoría
+        const productCategory = {
+            productId: result.id_product,
+            categoryId: product.id_category  // Cambio aquí a 'id_category'
+        };
+
+        // Crear la relación de la categoría
+        await ProductsCategory.bulkCreate([productCategory]); // Corregido el uso de 'bulkCreate'
+
+        return res.status(201).json(result);
+    } catch (error) {
+        console.error("Error al registrar el producto", error);
+
+        // Proporcionar un mensaje de error más detallado si es posible
+        if (error.name === 'SequelizeForeignKeyConstraintError') {
+            return res.status(400).json({ error: "Violación de restricción de clave foránea." });
+        }
+
+        return res.status(500).json({ error: "Error al registrar el producto" });
     }
-}
+};
+
 
 
 const actuzalizarProducto = async (req, res) => {
     res.header("Content-Type", "application/json")
     const { id_product } = req.params;
-    const {name, description, actual_stock, minimal_stock, buy_price, sell_price, metric_unit, state, id_category} = req.body;
+    const {name, description, actual_stock, minimal_stock, buy_price, sell_price, metric_unit, state, id_category, loteId} = req.body;
 
     if (!id_product) {
         return res.status(400).json({error: "El Id_product es requerido "})
@@ -97,6 +145,7 @@ const actuzalizarProducto = async (req, res) => {
         product.metric_unit = metric_unit || metric_unit
         product.state = state || product.state
         product.id_category = id_category || product.id_category
+        product.loteId = loteId || product.loteId
 
         const result = await product.save();
         return res.status(200).json(result)

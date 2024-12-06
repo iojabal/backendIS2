@@ -8,11 +8,26 @@ const Category = require('./Category');
 const ProductsCategory = require('./Producst_Category');
 const Lote = require('./Lote');
 const Providers = require('./Providers');
+const Sales = require('./Sales');
+const SalesProducts = require('./SalesProducts');
+const Report_Sales = require('./report_sales')
 
-const models = { User, Rol, Products, Category, ProductsCategory, Lote, Providers};
+const models = {
+    Rol,                   
+    User,                  
+    Providers,             
+    Category,              
+    Products,              
+    ProductsCategory,      
+    Lote,                  
+    Sales,                 
+    SalesProducts,
+    Report_Sales
+};
 
 Object.keys(models).forEach(modelName => {
     if (models[modelName].associate) {
+        console.log(`Aplicando asociaciones para el modelo: ${modelName}`);
         models[modelName].associate(models);
     }
 });
