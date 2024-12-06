@@ -10,7 +10,8 @@ const Lote = require('./Lote');
 const Providers = require('./Providers');
 const Sales = require('./Sales');
 const SalesProducts = require('./SalesProducts');
-const Report_Sales = require('./report_sales')
+const Report_Sales = require('./report_sales');
+const Order = require('./Order');
 
 const models = {
     Rol,                   
@@ -22,7 +23,8 @@ const models = {
     Lote,                  
     Sales,                 
     SalesProducts,
-    Report_Sales
+    Report_Sales,
+    Order
 };
 
 Object.keys(models).forEach(modelName => {

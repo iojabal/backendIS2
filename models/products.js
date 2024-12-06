@@ -3,7 +3,7 @@ const sequelize = require('../config/database')
 
 const Category = require("./Category")
 const ProductsCategory = require('./Producst_Category')
-const SalesProducts = require('./SalesProducts')
+// const SalesProducts = require('./SalesProducts')
 const Lote = require('./Lote')
 
 const Products = sequelize.define("product", {

@@ -1,5 +1,6 @@
+const jwt = require('jsonwebtoken')
 const {User, Rol} = require("../models")
-const { encriptarPassword } = require('../utils/encryption');
+const { encriptarPassword, passCompare } = require('../utils/encryption');
 
 const obtenerUsuarios = async (req, res) => {
     res.header("Content-type", "application/json")
@@ -122,6 +123,41 @@ const eliminarUsuario = async (req, res) => {
     }
 }
 
+const login = async (req, res) => {
+    res.header("Content-Type", "application/json");
+
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ error: "El nombre de usuario y la contraseña son requeridos." });
+    }
+
+    try {
+        // Buscar el usuario por su nombre de usuario
+        const user = await User.findOne({ where: { username } });
+
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado." });
+        }
+
+        // Comparar la contraseña ingresada con la almacenada
+        const isPasswordValid = await passCompare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Contraseña incorrecta." });
+        }
+
+        // Crear un token JWT (puedes personalizar la expiración del token y la información que contiene)
+        const token = jwt.sign({ id: user.id, username: user.username, roleId: user.roleId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Devolver el token al cliente
+        res.status(200).json({ message: "Autenticación exitosa", token });
+    } catch (error) {
+        console.error("Error en el login:", error);
+        return res.status(500).json({ error: "Error al intentar iniciar sesión." });
+    }
+};
+
 
 // module.exports = Use
 module.exports = {
@@ -129,5 +165,6 @@ module.exports = {
     actualizarUsuario,
     obtenerUsuarios,
     obtenerUsuarioPorId,
-    eliminarUsuario // Exporta el modelo también
+    eliminarUsuario,
+    login
 };

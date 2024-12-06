@@ -10,6 +10,7 @@ const saleRoutes = require('./routes/saleRoutes')
 const loteRoutes = require('./routes/loteRoutes')
 const providerRoutes = require('./routes/providersController')
 const reportSales = require('./routes/reportSalesRouter')
+const orderRoutes = require('./routes/OrderRoutes')
 
 const app = express();
 const PORT = process.env.PORT || 8081;
@@ -28,6 +29,7 @@ app.use("/api/lote", loteRoutes)
 app.use('/api/providers', providerRoutes)
 
 app.use('/api/reportes', reportSales)
+app.use('/api/orders', orderRoutes)
 
 app.listen(PORT, () => {
     console.log(`Servidor Corriendo en http://localhost:${PORT}`);

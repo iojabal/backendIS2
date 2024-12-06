@@ -32,7 +32,7 @@ const createSalesReport = async (fecha) => {
     const report = await Report_Sales.create({
       fecha: fecha,
       hora: new Date().toISOString().split("T")[1].split(".")[0], // Formato HH:mm:ss
-      dia: new Date(fecha).toLocaleDateString(), // Usa el día de la fecha del reporte
+      dia: new Date(fecha).toLocaleDateString("es-Bo"), // Usa el día de la fecha del reporte
       detalles: sales.map((sale) => ({
         id_sale: sale.id,
         totalSale: sale.totalSale,

@@ -9,7 +9,24 @@ const encriptarPassword = async (password) => {
     return hashedPassword;
 };
 
+const passCompare = async (passwordPlain, passwordHashed) => {
+    try {
+        // Compara la contraseña en texto plano con la encriptada
+        const esValida = await bcrypt.compare(passwordPlain, passwordHashed);
+        
+        if (esValida) {
+            return true; // Las contraseñas coinciden
+        } else {
+            return false; // Las contraseñas no coinciden
+        }
+    } catch (error) {
+        console.error("Error al comparar las contraseñas:", error);
+        throw new Error("Error en la comparación de contraseñas");
+    }
+}
+
 // Exportar la función
 module.exports = {
     encriptarPassword,
+    passCompare
 };
