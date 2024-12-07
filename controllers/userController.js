@@ -78,7 +78,7 @@ const actualizarUsuario = async (req, res) => {
     const {ci, name, lastname, username, password, roleId} = req.body
 
     if (!id || !ci) {
-        return res.staus(400).json({error: "Id o CI del usuario es requerido"});
+        return res.status(400).json({error: "Id o CI del usuario es requerido"});
     }
 
     try {
