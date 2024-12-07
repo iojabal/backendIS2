@@ -7,7 +7,7 @@ router.get('/', obtenerVentas)
 router.get('/:id', obtenerVentaPorId)
 router.put('/:id', actualizarVenta)
 router.delete('/:id', eliminarVenta)
-router.get('/:fecha', obtenerVentasPorFecha)
+// router.get('/:fecha', obtenerVentasPorFecha)
 
 
 module.exports = router
