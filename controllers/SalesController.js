@@ -82,7 +82,7 @@ const obtenerVentaPorId = async (req, res) => {
         const sale = await Sales.findByPk(id, {
             include: {
                 model: SalesProducts,
-                as: "products",
+                as: "product",
             },
         });
 
@@ -96,6 +96,35 @@ const obtenerVentaPorId = async (req, res) => {
         res.status(500).json({ error: "Error al obtener la venta" });
     }
 };
+
+const obtenerVentasPorFecha = async (req, res) => {
+    const { fecha } = req.params; // Supongamos que la fecha se pasa como "YYYY-MM-DD"
+
+    try {
+        const ventas = await Sales.findAll({
+            where: {
+                hour: {
+                    [Op.gte]: `${fecha} 00:00:00`,
+                    [Op.lt]: `${fecha} 23:59:59`,
+                },
+            },
+            include: {
+                model: SalesProducts,
+                as: "product",
+            },
+        });
+
+        if (ventas.length === 0) {
+            return res.status(404).json({ error: "No se encontraron ventas para la fecha especificada" });
+        }
+
+        res.status(200).json({ ventas });
+    } catch (error) {
+        console.error("Error al obtener las ventas por fecha: ", error);
+        res.status(500).json({ error: "Error al obtener las ventas por fecha" });
+    }
+};
+
 
 // Actualizar una venta
 const actualizarVenta = async (req, res) => {
@@ -168,4 +197,5 @@ module.exports = {
     obtenerVentaPorId,
     actualizarVenta,
     eliminarVenta,
+    obtenerVentasPorFecha
 };

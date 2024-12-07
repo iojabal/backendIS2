@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const {User, Rol} = require("../models")
 const { encriptarPassword, passCompare } = require('../utils/encryption');
+const { Sequelize } = require('sequelize');
+
 
 const obtenerUsuarios = async (req, res) => {
     res.header("Content-type", "application/json")
@@ -82,8 +84,14 @@ const actualizarUsuario = async (req, res) => {
     }
 
     try {
-        const user = await User.findOne({where: { id: id, $or: [{ci: { $eq: ci}}]}})
-
+        const user = await User.findOne({
+            where: {
+                [Sequelize.Op.or]: [
+                    { id: id },
+                    { ci: ci }
+                ]
+            }
+        });
         if (!user) { 
             return res.status(404).json({error: "Usuario no encontrado"});
         }
